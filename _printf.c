@@ -2,40 +2,68 @@
 #include <unistd.h>
 
 /**
- * _printf - Custom printf function implementation.
- * @format: The format string containing the placeholders.
+ * _putchar - writes a character to the standard output (stdout)
+ * @c: The character to print
  *
- * Return: The number of characters printed.
+ * Return: On success, 1 is returned. On error, -1 is returned,
+ * and errno is set appropriately.
+ */
+int _putchar(char c)
+{
+	return write(1, &c, 1);
+}
+
+/**
+ * _printf - produces output according to a format
+ * @format: character string containing zero or more directives
+ *
+ * Return: the number of characters printed (excluding the null byte)
  */
 int _printf(const char *format, ...)
 {
-    va_list args;
-    va_start(args, format);
+	va_list args;
+	int printed_chars = 0;
+	char *str;
 
-    int chars_printed = 0;
+	va_start(args, format);
 
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++;
-            if (*format == 'c')
-            {
-                char ch = va_arg(args, int);
-                write(1, &ch, 1);
-                chars_printed++;
-            }
-        }
-        else
-        {
-            write(1, format, 1);
-            chars_printed++;
-        }
+	while (*format)
+	{
+		if (*format == '%')
+		{
+			format++; /* Move past the '%' character */
+			switch (*format)
+			{
+				case 'c':
+					printed_chars += _putchar(va_arg(args, int));
+					break;
+				case 's':
+					str = va_arg(args, char*);
+					if (str == NULL)
+						str = "(null)";
+					while (*str)
+					{
+						printed_chars += _putchar(*str);
+						str++;
+					}
+					break;
+				case '%':
+					printed_chars += _putchar('%');
+					break;
+				default:
+					printed_chars += _putchar('%');
+					printed_chars += _putchar(*format);
+					break;
+			}
+		}
+		else
+		{
+			printed_chars += _putchar(*format);
+		}
+		format++;
+	}
 
-        format++;
-    }
+	va_end(args);
 
-    va_end(args);
-    return (chars_printed);
+	return (printed_chars);
 }
-
