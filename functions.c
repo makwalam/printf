@@ -1,5 +1,4 @@
 #include "main.h"
-#include <unistd.h>
 
 /**
  * _putchar - writes a character to the standard output (stdout)
@@ -41,6 +40,39 @@ int print_number(int n)
 }
 
 /**
+ * print_string - print a string
+ * @str: The string to print
+ *
+ * Return: the number of characters printed
+ */
+int print_string(char *str)
+{
+	int printed_chars = 0;
+
+	if (str == NULL)
+		str = "(null)";
+
+	while (*str)
+	{
+		printed_chars += _putchar(*str);
+		str++;
+	}
+
+	return (printed_chars);
+}
+
+/**
+ * print_char - print a character
+ * @c: The character to print
+ *
+ * Return: the number of characters printed
+ */
+int print_char(char c)
+{
+	return (_putchar(c));
+}
+
+/**
  * _printf - produces output according to a format
  * @format: character string containing zero or more directives
  *
@@ -63,17 +95,11 @@ int _printf(const char *format, ...)
 			switch (*format)
 			{
 				case 'c':
-					printed_chars += _putchar(va_arg(args, int));
+					printed_chars += print_char(va_arg(args, int));
 					break;
 				case 's':
 					str = va_arg(args, char*);
-					if (str == NULL)
-						str = "(null)";
-					while (*str)
-					{
-						printed_chars += _putchar(*str);
-						str++;
-					}
+					printed_chars += print_string(str);
 					break;
 				case 'd':
 				case 'i':
@@ -81,17 +107,17 @@ int _printf(const char *format, ...)
 					printed_chars += print_number(num);
 					break;
 				case '%':
-					printed_chars += _putchar('%');
+					printed_chars += print_char('%');
 					break;
 				default:
-					printed_chars += _putchar('%');
-					printed_chars += _putchar(*format);
+					printed_chars += print_char('%');
+					printed_chars += print_char(*format);
 					break;
 			}
 		}
 		else
 		{
-			printed_chars += _putchar(*format);
+			printed_chars += print_char(*format);
 		}
 		format++;
 	}
